@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Publicador · LeoVisual.nl</title>
+<style>
+:root{
+  --bg:#faf7f8; --card:#fff; --ink:#1d1a1c; --mute:#77707a; --line:#ece6e9;
+  --rosa:#e8457c; --rosa2:#fde7ef;
+  --prog:#3b6fe0; --prog2:#e6eefc; --ok:#1f9d63; --ok2:#e2f5ec;
+  --pend:#b7791f; --pend2:#fbf0dc; --err:#d64545; --err2:#fbe4e4; --borr:#8a8390; --borr2:#efecf0;
+  --yt:#e62117; --ig:#c13584; --tt:#111; --li:#0a66c2;
+  --r:14px; --sombra:0 1px 2px rgba(0,0,0,.04),0 6px 24px rgba(30,10,20,.06);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.wrap{max-width:1180px;margin:0 auto;padding:16px 16px 90px}
+header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.marca{font-weight:800;font-size:20px;letter-spacing:-.02em}
+.marca span{color:#9a9aa0}
+.marca small{font-weight:500;color:var(--mute);font-size:14px;margin-left:6px}
+.esp{flex:1}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:8px 14px;font-weight:600;box-shadow:var(--sombra)}
+.btn:hover{border-color:#d9cfd4}
+.btn.pri{background:var(--rosa);border-color:var(--rosa);color:#fff}
+.btn.peli{color:var(--err)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.mini{padding:4px 10px;font-size:13px;box-shadow:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sombra)}
+.cuentas{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px;font-size:13px}
+.chipc{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
+.punto{width:8px;height:8px;border-radius:50%;background:#ccc;flex:none}
+.punto.ok{background:var(--ok)} .punto.no{background:var(--err)}
+.tabs{display:flex;gap:4px;background:var(--borr2);padding:4px;border-radius:999px;width:max-content;margin-bottom:12px}
+.tabs button{border:0;background:transparent;padding:6px 16px;border-radius:999px;font-weight:600;color:var(--mute)}
+.tabs button.on{background:#fff;color:var(--ink);box-shadow:var(--sombra)}
+.mes{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.mes h2{margin:0;font-size:18px;min-width:170px}
+.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;background:var(--line);border-radius:var(--r);overflow:hidden;border:1px solid var(--line)}
+.dsem{background:#fbf9fa;font-size:12px;color:var(--mute);text-align:center;padding:6px 0;font-weight:600}
+.dia{background:#fff;min-height:104px;padding:6px;display:flex;flex-direction:column;gap:3px;cursor:pointer;position:relative}
+.dia.fuera{background:#fcfbfc;color:#bbb}
+.dia.hoy .num{background:var(--rosa);color:#fff}
+.dia.sel{outline:2px solid var(--rosa);outline-offset:-2px}
+.num{font-size:12px;font-weight:700;width:22px;height:22px;display:grid;place-items:center;border-radius:50%}
+.ev{font-size:12px;border-radius:6px;padding:2px 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-left:3px solid}
+.ev.programada{background:var(--prog2);border-color:var(--prog)}
+.ev.publicada{background:var(--ok2);border-color:var(--ok)}
+.ev.borrador{background:var(--borr2);border-color:var(--borr)}
+.ev.error,.ev.parcial{background:var(--err2);border-color:var(--err)}
+.ev.atrasada{background:var(--pend2);border-color:var(--pend)}
+.dots{display:none;gap:3px;flex-wrap:wrap}
+.dots i{width:7px;height:7px;border-radius:50%}
+.leyenda{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--mute);margin:10px 2px}
+.leyenda span{display:inline-flex;align-items:center;gap:5px}
+.leyenda i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.lista h3{font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);margin:22px 4px 8px}
+.fila{display:flex;gap:12px;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line);cursor:pointer}
+.fila:last-child{border-bottom:0}
+.fila:hover{background:#fdfafb}
+.fila .t{font-weight:600}
+.fila .s{font-size:13px;color:var(--mute)}
+.fila .f{min-width:96px;font-size:13px;color:var(--mute)}
+.estado{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.estado.programada{background:var(--prog2);color:var(--prog)}
+.estado.publicada{background:var(--ok2);color:var(--ok)}
+.estado.borrador{background:var(--borr2);color:var(--borr)}
+.estado.error,.estado.parcial{background:var(--err2);color:var(--err)}
+.estado.atrasada{background:var(--pend2);color:var(--pend)}
+.redesmini{display:flex;gap:4px}
+.rm{font-size:10px;font-weight:800;color:#fff;border-radius:5px;padding:2px 5px;opacity:.9}
+.rm.youtube{background:var(--yt)} .rm.instagram{background:var(--ig)} .rm.tiktok{background:var(--tt)} .rm.linkedin{background:var(--li)}
+.rm.off{opacity:.25}
+.vacio{padding:18px;color:var(--mute);text-align:center}
+.diasel{margin-top:12px}
+/* modal */
+.velo{position:fixed;inset:0;background:rgba(20,10,15,.35);display:none;align-items:flex-start;justify-content:center;padding:24px 12px;overflow:auto;z-index:20}
+.velo.on{display:flex}
+.modal{width:100%;max-width:640px;padding:20px}
+.modal h2{margin:0 0 14px;font-size:19px}
+label{display:block;font-size:13px;font-weight:600;color:var(--mute);margin:12px 0 5px}
+input[type=text],input[type=url],input[type=password],input[type=datetime-local],select,textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:#fff}
+textarea{min-height:120px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--rosa2);border-color:var(--rosa)}
+.cont{font-size:12px;color:var(--mute);text-align:right;margin-top:3px}
+.redes{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.red{border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:6px}
+.red.on{border-color:var(--rosa);background:#fffafc}
+.red header{margin:0;gap:8px}
+.red .det{font-size:12px;color:var(--mute)}
+.red .det a{color:var(--li)}
+.red .det .e{color:var(--err)}
+.red input[type=text],.red select{padding:6px 8px;font-size:13px}
+.acciones{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px;align-items:center}
+.nota{font-size:12px;color:var(--mute);margin-top:4px}
+.barra{height:6px;background:var(--line);border-radius:9px;overflow:hidden;margin-top:6px;display:none}
+.barra i{display:block;height:100%;width:0;background:var(--rosa);transition:width .2s}
+.hist{font-size:12px;color:var(--mute);max-height:120px;overflow:auto;border-top:1px dashed var(--line);margin-top:14px;padding-top:8px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;font-size:14px;z-index:40;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw}
+.toast.on{opacity:1}
+.login{max-width:460px;margin:8vh auto;padding:24px}
+.login p{color:var(--mute);font-size:14px}
+.login ol{font-size:14px;color:var(--mute);padding-left:18px}
+.run{font-size:12px;color:var(--mute)}
+@media (max-width:720px){
+  .dia{min-height:58px;padding:4px}
+  .ev{display:none}
+  .dots{display:flex}
+  .redes{grid-template-columns:1fr}
+  .fila .f{min-width:70px}
+  header .btn{padding:7px 11px;font-size:14px}
+  .fab{position:fixed;right:16px;bottom:18px;z-index:15;width:56px;height:56px;border-radius:50%;font-size:28px;padding:0;display:grid;place-items:center}
+}
+@media (min-width:721px){.fab{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div class="velo" id="velo"><div class="card modal" id="modal"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+/* ---------- configuración ---------- */
+const REDES = {
+  youtube:  {n:"YouTube",  c:"YT", video:true},
+  instagram:{n:"Instagram",c:"IG", video:true},
+  tiktok:   {n:"TikTok",   c:"TT", video:true},
+  linkedin: {n:"LinkedIn", c:"IN", video:false},
+};
+const RAMA = "main";
+const LIMITE_MB = 95;
+const almacen = {
+  get(k){ try{ return localStorage.getItem(k) }catch(e){ return null } },
+  set(k,v){ try{ localStorage.setItem(k,v) }catch(e){} },
+  del(k){ try{ localStorage.removeItem(k) }catch(e){} },
+};
+const S = {
+  repo: almacen.get("pub_repo") || "LEONIDES600/publicador-app",
+  token: almacen.get("pub_token") || sessionStorageGet(),
+  posts: [], cuentas: null, runs: [],
+  vista: almacen.get("pub_vista") || "cal",
+  mes: new Date(), diaSel: null, cargando: false,
+};
+function sessionStorageGet(){ try{ return sessionStorage.getItem("pub_token") }catch(e){ return null } }
+
+/* ---------- utilidades ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function toast(t, ms=2600){ const e=$("#toast"); e.textContent=t; e.classList.add("on"); clearTimeout(toast._t); toast._t=setTimeout(()=>e.classList.remove("on"),ms); }
+function b64utf8(s){ const b=new TextEncoder().encode(s); let r=""; for(let i=0;i<b.length;i+=0x8000) r+=String.fromCharCode.apply(null,b.subarray(i,i+0x8000)); return btoa(r); }
+function utf8b64(b){ const bin=atob(b.replace(/\n/g,"")); const u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i); return new TextDecoder().decode(u); }
+const pad = n => String(n).padStart(2,"0");
+function aLocalInput(iso){ const d=new Date(iso); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`; }
+function mismoDia(a,b){ return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate(); }
+function fmtFecha(iso){ const d=new Date(iso); return d.toLocaleDateString("es-ES",{day:"numeric",month:"short"})+" · "+d.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"}); }
+function hace(iso){ const s=(Date.now()-new Date(iso))/1000; if(s<90) return "hace un momento"; if(s<3600) return `hace ${Math.round(s/60)} min`; if(s<86400) return `hace ${Math.round(s/3600)} h`; return `hace ${Math.round(s/86400)} d`; }
+function nuevoId(fecha){ const d=new Date(fecha); return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}-${Math.random().toString(36).slice(2,6)}`; }
+function limpioNombre(n){ return n.normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^\w.\-]+/g,"_").slice(-80); }
+/** Estado visible: una programada cuya hora pasó hace >75 min sin publicarse = «atrasada». */
+function estadoVisible(p){ if(p.estado==="programada" && Date.now()-new Date(p.fecha) > 75*60000) return "atrasada"; return p.estado||"borrador"; }
+const NOMBRE_ESTADO = {programada:"Programada", publicada:"Publicada", borrador:"Borrador", error:"Error", parcial:"Parcial", atrasada:"Atrasada"};
+const COLOR_ESTADO = {programada:"var(--prog)", publicada:"var(--ok)", borrador:"var(--borr)", error:"var(--err)", parcial:"var(--err)", atrasada:"var(--pend)"};
+
+/* ---------- API de GitHub ---------- */
+async function gh(ruta, opt={}){
+  const r = await fetch(ruta.startsWith("http")?ruta:`https://api.github.com${ruta}`, {
+    ...opt,
+    headers:{ "Authorization":`Bearer ${S.token}`, "Accept":"application/vnd.github+json",
+              "X-GitHub-Api-Version":"2022-11-28", ...(opt.body&&typeof opt.body==="string"?{"Content-Type":"application/json"}:{}), ...(opt.headers||{}) },
+  });
+  if(r.status===204) return null;
+  const t = await r.text();
+  let j=null; try{ j=t?JSON.parse(t):null }catch(e){}
+  if(!r.ok){ const m=(j&&j.message)||t||r.statusText; const e=new Error(`GitHub ${r.status}: ${m}`); e.status=r.status; throw e; }
+  return j;
+}
+async function cargarPosts(){
+  const [owner,name] = S.repo.split("/");
+  const q = `query($o:String!,$n:String!,$e:String!,$c:String!){repository(owner:$o,name:$n){
+     cola:object(expression:$e){... on Tree{entries{name oid object{... on Blob{text isTruncated}}}}}
+     cuentas:object(expression:$c){... on Blob{text}} }}`;
+  const j = await gh("/graphql",{method:"POST",body:JSON.stringify({query:q,variables:{o:owner,n:name,e:`${RAMA}:cola`,c:`${RAMA}:estado/cuentas.json`}})});
+  if(j.errors) throw new Error(j.errors.map(e=>e.message).join("; "));
+  const repo = j.data.repository;
+  if(!repo) throw new Error("No encuentro el repo o el token no tiene acceso.");
+  const posts=[];
+  for(const e of (repo.cola?.entries||[])){
+    if(!e.name.endsWith(".json")) continue;
+    let txt = e.object?.text;
+    if(e.object?.isTruncated){ const f=await gh(`/repos/${S.repo}/contents/cola/${encodeURIComponent(e.name)}?ref=${RAMA}`); txt=utf8b64(f.content); }
+    try{ const p=JSON.parse(txt); p._sha=e.oid; p._archivo=e.name; posts.push(p); }catch(err){ console.warn("JSON roto",e.name); }
+  }
+  S.posts = posts.sort((a,b)=>new Date(a.fecha||0)-new Date(b.fecha||0));
+  try{ S.cuentas = repo.cuentas?.text ? JSON.parse(repo.cuentas.text) : null }catch(e){ S.cuentas=null }
+  try{ S.runs = (await gh(`/repos/${S.repo}/actions/runs?per_page=3`)).workflow_runs||[] }catch(e){ S.runs=[] }
+}
+async function guardarPost(p, mensaje){
+  const limpio = {...p}; delete limpio._sha; delete limpio._archivo;
+  limpio.actualizada = new Date().toISOString().replace(/\.\d+Z$/,"Z");
+  const ruta = `cola/${p._archivo || p.id+".json"}`;
+  const body = {message: mensaje || `panel: ${p.titulo||p.id}`, content: b64utf8(JSON.stringify(limpio,null,2)+"\n"), branch: RAMA};
+  if(p._sha) body.sha = p._sha;
+  try{
+    const r = await gh(`/repos/${S.repo}/contents/${ruta}`,{method:"PUT",body:JSON.stringify(body)});
+    p._sha = r.content.sha; p._archivo = r.content.name;
+  }catch(e){
+    if(e.status===409||e.status===422) throw new Error("Este post ha cambiado mientras lo editabas (seguramente se acaba de publicar). Recarga y vuelve a intentarlo.");
+    throw e;
+  }
+}
+async function borrarArchivo(ruta, sha, msg){
+  await gh(`/repos/${S.repo}/contents/${ruta}`,{method:"DELETE",body:JSON.stringify({message:msg,sha,branch:RAMA})});
+}
+function subirVideo(file, onProg){
+  return new Promise((ok,ko)=>{
+    const lector = new FileReader();
+    lector.onerror = ()=>ko(new Error("No pude leer el archivo."));
+    lector.onload = ()=>{
+      const b64 = String(lector.result).split(",")[1];
+      const ruta = `videos/${new Date().toISOString().slice(0,10)}-${limpioNombre(file.name)}`;
+      const x = new XMLHttpRequest();
+      x.open("PUT",`https://api.github.com/repos/${S.repo}/contents/${ruta}`);
+      x.setRequestHeader("Authorization",`Bearer ${S.token}`);
+      x.setRequestHeader("Accept","application/vnd.github+json");
+      x.setRequestHeader("Content-Type","application/json");
+      x.upload.onprogress = e=>{ if(e.lengthComputable) onProg(e.loaded/e.total) };
+      x.onload = ()=>{ if(x.status>=200&&x.status<300) ok(ruta); else { let m=x.responseText; try{m=JSON.parse(m).message}catch(e){} ko(new Error(`GitHub ${x.status}: ${m}`)); } };
+      x.onerror = ()=>ko(new Error("Se cortó la subida."));
+      x.send(JSON.stringify({message:`vídeo: ${file.name}`,content:b64,branch:RAMA}));
+    };
+    lector.readAsDataURL(file);
+  });
+}
+async function lanzar(workflow){
+  await gh(`/repos/${S.repo}/actions/workflows/${workflow}/dispatches`,{method:"POST",body:JSON.stringify({ref:RAMA})});
+}
+
+/* ---------- pantallas ---------- */
+function pintarLogin(error){
+  $("#app").innerHTML = `
+  <div class="card login">
+    <div class="marca">LeoVisual<span>.nl</span><small>Publicador</small></div>
+    <p>Tu calendario de publicaciones. Los datos viven en tu repo privado de GitHub; esta página no guarda nada fuera de tu navegador.</p>
+    ${error?`<p style="color:var(--err)">${esc(error)}</p>`:""}
+    <label>Repo privado</label><input type="text" id="lrepo" value="${esc(S.repo)}">
+    <label>Token de GitHub (fine-grained)</label><input type="password" id="ltok" placeholder="github_pat_…" autocomplete="off">
+    <label style="display:flex;gap:8px;align-items:center;font-weight:500"><input type="checkbox" id="lrec" checked> Recordar en este dispositivo</label>
+    <div class="acciones"><button class="btn pri" id="lgo">Entrar</button></div>
+    <ol>
+      <li>github.com → Settings → Developer settings → Fine-grained tokens → Generate.</li>
+      <li>Repository access: <b>solo</b> <code>publicador-app</code>.</li>
+      <li>Permisos: Contents <b>Read and write</b> · Actions <b>Read and write</b>.</li>
+    </ol>
+  </div>`;
+  $("#lgo").onclick = async ()=>{
+    S.repo = $("#lrepo").value.trim(); S.token = $("#ltok").value.trim();
+    if(!S.token) return toast("Pega tu token.");
+    almacen.set("pub_repo",S.repo);
+    if($("#lrec").checked) almacen.set("pub_token",S.token); else { almacen.del("pub_token"); try{sessionStorage.setItem("pub_token",S.token)}catch(e){} }
+    await recargar();
+  };
+}
+
+async function recargar(silencio){
+  S.cargando = true;
+  try{ await cargarPosts(); pintar(); if(!silencio) toast("Actualizado"); }
+  catch(e){ if(e.status===401){ almacen.del("pub_token"); S.token=null; return pintarLogin("El token no vale o ha caducado."); }
+            if(!S.posts.length && !$("#cal")) return pintarLogin(e.message); toast(e.message,5000); }
+  finally{ S.cargando=false; }
+}
+
+function pintar(){
+  const run = S.runs[0];
+  const runTxt = run ? `Última ejecución ${hace(run.updated_at)} · ${run.status!=="completed"?"en curso…":run.conclusion==="success"?"✓ bien":"✗ "+run.conclusion}` : "Sin ejecuciones todavía";
+  $("#app").innerHTML = `
+  <header>
+    <div class="marca">LeoVisual<span>.nl</span><small>Publicador</small></div>
+    <div class="esp"></div>
+    <button class="btn" id="bRec" title="Recargar">↻</button>
+    <button class="btn" id="bYa" title="Publica ya lo que esté programado y ya toque">Publicar ahora</button>
+    <button class="btn pri" id="bNueva">+ Nueva</button>
+  </header>
+  <div class="cuentas">${pintarCuentas()}<span class="run">${esc(runTxt)}</span></div>
+  <div class="tabs"><button data-v="cal" class="${S.vista==="cal"?"on":""}">Calendario</button><button data-v="lista" class="${S.vista==="lista"?"on":""}">Lista</button></div>
+  <div id="vista"></div>
+  <button class="btn pri fab" id="bFab" aria-label="Nueva publicación">+</button>`;
+  $("#bRec").onclick=()=>recargar();
+  $("#bNueva").onclick=$("#bFab").onclick=()=>abrirEditor(null, S.diaSel);
+  $("#bYa").onclick=async()=>{ try{ await lanzar("publicar.yml"); toast("Lanzado. GitHub tarda 1–2 min en arrancar."); setTimeout(()=>recargar(true),60000);}catch(e){toast(e.message,5000)} };
+  document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{ S.vista=b.dataset.v; almacen.set("pub_vista",S.vista); pintar(); });
+  document.querySelectorAll("[data-comp]").forEach(b=>b.onclick=async()=>{ try{ await lanzar("comprobar.yml"); toast("Comprobando cuentas… recarga en 1–2 min."); setTimeout(()=>recargar(true),75000);}catch(e){toast(e.message,5000)} });
+  S.vista==="cal" ? pintarCalendario() : pintarLista();
+}
+
+function pintarCuentas(){
+  const c = S.cuentas?.redes || {};
+  const chips = Object.entries(REDES).map(([k,r])=>{
+    const x=c[k]; const cls = x ? (x.ok?"ok":"no") : "";
+    const tit = x ? (x.ok?`Conectada: ${x.cuenta}`:x.error) : "Sin comprobar";
+    return `<span class="chipc" title="${esc(tit)}"><span class="punto ${cls}"></span>${r.n}</span>`;
+  }).join("");
+  const cuando = S.cuentas?.comprobado ? ` · ${hace(S.cuentas.comprobado)}` : "";
+  return chips + `<button class="btn mini" data-comp>Comprobar cuentas${cuando}</button>`;
+}
+
+function chipsRedes(p){
+  return `<span class="redesmini">${Object.keys(REDES).map(k=>{const c=p.redes?.[k]; return c&&c.activa!==false?`<span class="rm ${k}" title="${REDES[k].n}: ${esc(c.estado||"")}">${REDES[k].c}</span>`:""}).join("")}</span>`;
+}
+
+function pintarCalendario(){
+  const m = new Date(S.mes.getFullYear(), S.mes.getMonth(), 1);
+  const inicio = new Date(m); inicio.setDate(1 - ((m.getDay()+6)%7));
+  const hoy = new Date();
+  let celdas = ["L","M","X","J","V","S","D"].map(d=>`<div class="dsem">${d}</div>`).join("");
+  for(let i=0;i<42;i++){
+    const d = new Date(inicio); d.setDate(inicio.getDate()+i);
+    if(i===35 && d.getMonth()!==m.getMonth()) break;
+    const del = S.posts.filter(p=>p.fecha && mismoDia(new Date(p.fecha),d));
+    const cls = ["dia", d.getMonth()!==m.getMonth()?"fuera":"", mismoDia(d,hoy)?"hoy":"", S.diaSel&&mismoDia(d,S.diaSel)?"sel":""].join(" ");
+    celdas += `<div class="${cls}" data-dia="${d.toISOString()}">
+      <div class="num">${d.getDate()}</div>
+      ${del.slice(0,3).map(p=>{const e=estadoVisible(p);return `<div class="ev ${e}" data-id="${esc(p.id)}" title="${esc(NOMBRE_ESTADO[e])}">${new Date(p.fecha).toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})} ${esc(p.titulo||"(sin título)")}</div>`}).join("")}
+      ${del.length>3?`<div class="ev borrador">+${del.length-3} más</div>`:""}
+      <div class="dots">${del.map(p=>`<i style="background:${COLOR_ESTADO[estadoVisible(p)]}"></i>`).join("")}</div>
+    </div>`;
+  }
+  const sinFecha = S.posts.filter(p=>!p.fecha);
+  $("#vista").innerHTML = `
+    <div class="mes"><button class="btn mini" id="mAnt">‹</button><h2>${(t=>t[0].toUpperCase()+t.slice(1))(m.toLocaleDateString("es-ES",{month:"long",year:"numeric"}))}</h2><button class="btn mini" id="mSig">›</button><button class="btn mini" id="mHoy">Hoy</button></div>
+    <div class="grid" id="cal">${celdas}</div>
+    <div class="leyenda">${["programada","publicada","atrasada","error","borrador"].map(e=>`<span><i style="background:${COLOR_ESTADO[e]}"></i>${NOMBRE_ESTADO[e]}</span>`).join("")}</div>
+    <div id="diaSel" class="diasel"></div>
+    ${sinFecha.length?`<div class="lista"><h3>Borradores sin fecha</h3><div class="card">${sinFecha.map(fila).join("")}</div></div>`:""}`;
+  $("#mAnt").onclick=()=>{S.mes=new Date(m.getFullYear(),m.getMonth()-1,1);pintarCalendario()};
+  $("#mSig").onclick=()=>{S.mes=new Date(m.getFullYear(),m.getMonth()+1,1);pintarCalendario()};
+  $("#mHoy").onclick=()=>{S.mes=new Date();S.diaSel=new Date();pintarCalendario()};
+  document.querySelectorAll(".dia").forEach(c=>c.onclick=ev=>{
+    const id = ev.target.closest(".ev")?.dataset.id;
+    if(id && window.innerWidth>720) return abrirEditor(S.posts.find(p=>p.id===id));
+    S.diaSel = new Date(c.dataset.dia); pintarCalendario();
+  });
+  enlazarFilas();
+  if(S.diaSel){
+    const del = S.posts.filter(p=>p.fecha&&mismoDia(new Date(p.fecha),S.diaSel));
+    $("#diaSel").innerHTML = `<div class="lista"><h3>${S.diaSel.toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long"})}</h3>
+      <div class="card">${del.length?del.map(fila).join(""):`<div class="vacio">Nada este día.</div>`}
+      <div class="fila" id="nuevoDia" style="color:var(--rosa);font-weight:600">+ Nueva publicación este día</div></div></div>`;
+    $("#nuevoDia").onclick=()=>abrirEditor(null,S.diaSel);
+    enlazarFilas();
+  }
+}
+
+function fila(p){
+  const e=estadoVisible(p);
+  return `<div class="fila" data-fila="${esc(p.id)}">
+    <div class="f">${p.fecha?fmtFecha(p.fecha):"Sin fecha"}</div>
+    <div style="flex:1;min-width:0"><div class="t">${esc(p.titulo||"(sin título)")}</div>
+      <div class="s" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc((p.texto||"").slice(0,120))}</div></div>
+    ${chipsRedes(p)}<span class="estado ${e}">${NOMBRE_ESTADO[e]}</span></div>`;
+}
+function enlazarFilas(){ document.querySelectorAll("[data-fila]").forEach(f=>f.onclick=()=>abrirEditor(S.posts.find(p=>p.id===f.dataset.fila))); }
+
+function pintarLista(){
+  const ahora=Date.now();
+  const pend = S.posts.filter(p=>["borrador","error","parcial","atrasada"].includes(estadoVisible(p)));
+  const prox = S.posts.filter(p=>estadoVisible(p)==="programada");
+  const hechas = S.posts.filter(p=>p.estado==="publicada").reverse();
+  const bloque=(t,arr,vac)=>`<h3>${t} (${arr.length})</h3><div class="card">${arr.length?arr.map(fila).join(""):`<div class="vacio">${vac}</div>`}</div>`;
+  $("#vista").innerHTML = `<div class="lista">
+    ${bloque("Pendientes",pend,"Nada pendiente. 👌")}
+    ${bloque("Próximas",prox,"No hay nada programado.")}
+    ${bloque("Publicadas",hechas.slice(0,60),"Todavía no has publicado nada desde aquí.")}</div>`;
+  enlazarFilas();
+}
+
+/* ---------- editor ---------- */
+function abrirEditor(p, dia){
+  const nuevo = !p;
+  if(nuevo){
+    const f = dia ? new Date(dia) : new Date(Date.now()+3600000);
+    if(dia) f.setHours(12,0,0,0); else f.setMinutes(0,0,0);
+    p = {id:"", titulo:"", texto:"", video:"", fecha:f.toISOString(), estado:"borrador",
+         redes:{youtube:{activa:true,estado:"pendiente",privacidad:"public"},instagram:{activa:true,estado:"pendiente"},tiktok:{activa:false,estado:"pendiente"},linkedin:{activa:false,estado:"pendiente"}}};
+  }
+  const d = JSON.parse(JSON.stringify(p)); d._sha=p._sha; d._archivo=p._archivo;
+  for(const k of Object.keys(REDES)) d.redes[k] = d.redes[k] || {activa:false,estado:"pendiente"};
+  const publicada = d.estado==="publicada";
+  const redHTML = k => {
+    const c=d.redes[k], r=REDES[k];
+    let det="";
+    if(c.estado==="publicada") det=`✓ Publicada ${c.publicada_en?hace(c.publicada_en):""} ${c.url?`· <a href="${esc(c.url)}" target="_blank" rel="noopener">ver</a>`:""}${c.nota?`<br>${esc(c.nota)}`:""}`;
+    else if(c.estado==="error") det=`<span class="e">✗ ${esc(c.error||"Error")}</span> <button class="btn mini" data-reint="${k}">Reintentar</button>`;
+    const extra = k==="youtube" ? `<input type="text" data-yt-titulo placeholder="Título en YouTube (opcional, máx. 100)" value="${esc(c.titulo||"")}">
+       <select data-yt-priv>${["public","unlisted","private"].map(v=>`<option value="${v}" ${(c.privacidad||"public")===v?"selected":""}>${{public:"Público",unlisted:"Oculto",private:"Privado"}[v]}</option>`).join("")}</select>`
+      : k==="tiktok" ? `<div class="det">Llega a tu bandeja de TikTok; lo terminas en la app.</div>`
+      : k==="linkedin" ? `<div class="det">Tu perfil personal. Sin vídeo publica solo texto.</div>` : "";
+    return `<div class="red ${c.activa?"on":""}" data-red="${k}">
+      <header><label style="margin:0;display:flex;gap:8px;align-items:center;color:var(--ink)"><input type="checkbox" data-act="${k}" ${c.activa?"checked":""} ${c.estado==="publicada"?"disabled":""}> <span class="rm ${k}">${r.c}</span> ${r.n}</label></header>
+      ${extra}${det?`<div class="det">${det}</div>`:""}</div>`;
+  };
+  $("#modal").innerHTML = `
+    <h2>${nuevo?"Nueva publicación":publicada?"Publicación":"Editar publicación"}</h2>
+    <label>Título interno</label><input type="text" id="eTit" value="${esc(d.titulo)}" placeholder="Ej.: Reel oficina de bots">
+    <label>Texto / descripción</label><textarea id="eTxt" placeholder="Texto que acompaña al vídeo, hashtags…">${esc(d.texto)}</textarea>
+    <div class="cont" id="eCont"></div>
+    <label>Fecha y hora (tu hora local)</label><input type="datetime-local" id="eFecha" value="${aLocalInput(d.fecha)}">
+    <label>Vídeo</label>
+    <div id="eVidActual" class="nota">${d.video?`Actual: <b>${esc(d.video)}</b> <button class="btn mini" id="eVidQuitar">Quitar</button>`:"Sin vídeo"}</div>
+    <input type="file" id="eFile" accept="video/*" style="margin-top:6px">
+    <div class="barra" id="eBarra"><i></i></div>
+    <input type="url" id="eUrl" placeholder="…o pega un enlace directo al .mp4" style="margin-top:6px" value="${d.video&&d.video.startsWith("http")?esc(d.video):""}">
+    <div class="nota">Hasta ${LIMITE_MB} MB se guardan en tu repo. Para vídeos más grandes usa un enlace directo.</div>
+    <label>Redes</label><div class="redes">${Object.keys(REDES).map(redHTML).join("")}</div>
+    <div class="acciones">
+      ${publicada?"":`<button class="btn pri" id="eProg">${d.estado==="programada"?"Guardar programada":"Programar"}</button>
+      <button class="btn" id="eBorr">Guardar como borrador</button>`}
+      <div class="esp"></div>
+      ${nuevo?"":`<button class="btn peli" id="eDel">Borrar</button>`}
+      <button class="btn" id="eCerrar">Cerrar</button>
+    </div>
+    ${d.historial?.length?`<div class="hist">${d.historial.slice().reverse().map(h=>`<div>${fmtFecha(h.fecha)} — ${esc(h.mensaje)}</div>`).join("")}</div>`:""}`;
+  $("#velo").classList.add("on");
+
+  const cont=()=>{ const n=$("#eTxt").value.length; $("#eCont").textContent=`${n} caracteres · Instagram 2.200 · LinkedIn 3.000 · YouTube 5.000`; $("#eCont").style.color=n>2200?"var(--err)":""; };
+  $("#eTxt").oninput=cont; cont();
+  document.querySelectorAll("[data-act]").forEach(ch=>ch.onchange=()=>{ d.redes[ch.dataset.act].activa=ch.checked; ch.closest(".red").classList.toggle("on",ch.checked); });
+  document.querySelectorAll("[data-reint]").forEach(b=>b.onclick=()=>{ const c=d.redes[b.dataset.reint]; c.estado="pendiente"; c.intentos=0; c.error=""; b.parentElement.innerHTML="Se reintentará al programar."; });
+  $("#eVidQuitar") && ($("#eVidQuitar").onclick=()=>{ d.video=""; $("#eVidActual").textContent="Sin vídeo"; $("#eUrl").value=""; });
+  $("#eCerrar").onclick=cerrar;
+  $("#velo").onclick=e=>{ if(e.target.id==="velo") cerrar(); };
+
+  const recoger = ()=>{
+    d.titulo=$("#eTit").value.trim(); d.texto=$("#eTxt").value;
+    const f=$("#eFecha").value; d.fecha = f ? new Date(f).toISOString().replace(/\.\d+Z$/,"Z") : "";
+    const yt=d.redes.youtube; yt.titulo=$("[data-yt-titulo]").value.trim(); yt.privacidad=$("[data-yt-priv]").value;
+    const url=$("#eUrl").value.trim(); if(url) d.video=url;
+  };
+  const guardar = async estado=>{
+    recoger();
+    const activas = Object.entries(d.redes).filter(([k,c])=>c.activa);
+    if(estado==="programada"){
+      if(!d.fecha) return toast("Pon fecha y hora.");
+      if(!activas.length) return toast("Elige al menos una red.");
+      const file=$("#eFile").files[0];
+      const faltaVideo = activas.filter(([k])=>REDES[k].video).map(([k])=>REDES[k].n);
+      if(!d.video && !file && faltaVideo.length) return toast(`${faltaVideo.join(", ")} necesita${faltaVideo.length>1?"n":""} vídeo.`,4000);
+      if(new Date(d.fecha) < Date.now()-60000 && !confirm("Esa hora ya ha pasado: se publicará en la próxima ejecución (≤30 min). ¿Seguimos?")) return;
+    }
+    if(!d.titulo && !d.texto) return toast("Pon al menos un título o un texto.");
+    const botones=[...document.querySelectorAll("#modal .acciones .btn")]; botones.forEach(b=>b.disabled=true);
+    try{
+      const file=$("#eFile").files[0];
+      if(file){
+        if(file.size > LIMITE_MB*1024*1024) throw new Error(`El vídeo pesa ${(file.size/1048576).toFixed(0)} MB (máx. ${LIMITE_MB}). Usa un enlace directo.`);
+        $("#eBarra").style.display="block";
+        toast("Subiendo vídeo…",60000);
+        d.video = await subirVideo(file, x=>$("#eBarra i").style.width=(x*100).toFixed(0)+"%");
+      }
+      if(!d.id){ d.id=nuevoId(d.fecha||new Date()); d.creada=new Date().toISOString().replace(/\.\d+Z$/,"Z"); }
+      for(const c of Object.values(d.redes)) if(c.estado!=="publicada"){ c.estado = c.estado==="error"&&c.intentos>=3 ? "error" : (c.estado||"pendiente"); }
+      d.estado = estado;
+      await guardarPost(d, `${estado==="programada"?"programa":"borrador"}: ${d.titulo||d.id}`);
+      const i=S.posts.findIndex(x=>x.id===d.id); if(i>=0) S.posts[i]=d; else S.posts.push(d);
+      S.posts.sort((a,b)=>new Date(a.fecha||0)-new Date(b.fecha||0));
+      if(d.fecha) S.mes=new Date(d.fecha);
+      cerrar(); pintar(); toast(estado==="programada"?`Programada para ${fmtFecha(d.fecha)}`:"Borrador guardado");
+    }catch(e){ toast(e.message,6000); botones.forEach(b=>b.disabled=false); }
+  };
+  $("#eProg") && ($("#eProg").onclick=()=>guardar("programada"));
+  $("#eBorr") && ($("#eBorr").onclick=()=>guardar("borrador"));
+  $("#eDel") && ($("#eDel").onclick=async()=>{
+    if(!confirm("¿Borrar esta publicación del calendario? (No borra lo ya publicado en las redes.)")) return;
+    try{
+      await borrarArchivo(`cola/${d._archivo}`, d._sha, `borra: ${d.titulo||d.id}`);
+      if(d.video && d.video.startsWith("videos/") && !S.posts.some(x=>x.id!==d.id&&x.video===d.video) && confirm("¿Borrar también el vídeo del repo?")){
+        try{ const f=await gh(`/repos/${S.repo}/contents/${d.video}?ref=${RAMA}`); await borrarArchivo(d.video,f.sha,`borra vídeo ${d.video}`);}catch(e){ toast("No pude borrar el vídeo: "+e.message,5000); }
+      }
+      S.posts=S.posts.filter(x=>x.id!==d.id); cerrar(); pintar(); toast("Borrada");
+    }catch(e){ toast(e.message,6000); }
+  });
+}
+function cerrar(){ $("#velo").classList.remove("on"); }
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") cerrar(); });
+
+/* ---------- arranque ---------- */
+if(S.token) recargar(true); else pintarLogin();
+setInterval(()=>{ if(S.token && !document.hidden && !$("#velo").classList.contains("on")) recargar(true); }, 5*60000);
+</script>
+</body>
+</html>
